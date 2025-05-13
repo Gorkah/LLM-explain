@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Què és un LLM?</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Què és un LLM?</h1>
+  </header>
+
+  <section id="explicacio">
+    <h2>Explicació bàsica</h2>
+    <p>Els models de llenguatge a gran escala (LLMs) són xarxes neuronals entrenades amb grans quantitats de text per generar, resumir, traduir o comprendre llenguatge natural.</p>
+    <ul>
+      <li>Assistents de conversa</li>
+      <li>Traducció automàtica</li>
+      <li>Generació de codi</li>
+      <li>Anàlisi de sentiments</li>
+    </ul>
+  </section>
+
+  <section id="comparativa">
+    <h2>Comparativa de models</h2>
+    <button onclick="toggleTaula()">Mostrar / Amagar Taula</button>
+    <table id="taula-models">
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Empresa</th>
+          <th>Codi obert</th>
+          <th>Accés</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>GPT-4</td>
+          <td>OpenAI</td>
+          <td>No</td>
+          <td>ChatGPT Plus</td>
+        </tr>
+        <tr>
+          <td>Claude</td>
+          <td>Anthropic</td>
+          <td>No</td>
+          <td>Poe</td>
+        </tr>
+        <tr>
+          <td>Gemini</td>
+          <td>Google</td>
+          <td>Parcial</td>
+          <td>Gemini</td>
+        </tr>
+        <tr>
+          <td>LLaMA</td>
+          <td>Meta</td>
+          <td>Sí</td>
+          <td>Hugging Face</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="enllacos">
+    <h2>Enllaços útils</h2>
+    <ul>
+      <li><a href="https://chat.openai.com/" target="_blank">OpenAI</a></li>
+      <li><a href="https://poe.com/" target="_blank">Poe</a></li>
+      <li><a href="https://huggingface.co/models" target="_blank">Hugging Face</a></li>
+    </ul>
+  </section>
+
+  <section id="riscs">
+    <h2>Riscos ètics</h2>
+    <p>Tot i els avantatges dels LLMs, també presenten riscos com ara:</p>
+    <ul>
+      <li>Desinformació</li>
+      <li>Biaixos algorítmics</li>
+      <li>Problemes de privacitat</li>
+    </ul>
+  </section>
+
+  <section id="trivia">
+    <h2>Trivia interactiva</h2>
+    <button onclick="alert('Correcte! GPT-4 és propietari d’OpenAI.')">Qui ha creat GPT-4?</button>
+  </section>
+</body>
+</html>
