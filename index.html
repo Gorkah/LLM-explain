@@ -12,8 +12,13 @@
   <script defer src="app.js"></script>
 </head>
 <body>
+    <!-- Canvas para el fondo de grafos animados -->
+    <canvas id="graph-background"></canvas>
   <header class="hero">
     <div class="container">
+      <div class="header-controls">
+        <button id="dark-mode-toggle" class="dark-mode-toggle"><i class="fas fa-moon"></i></button>
+      </div>
       <h1 class="animate-on-scroll">Què és un LLM?</h1>
       <p class="tagline animate-on-scroll">Una guía interactiva sobre els Models de Llenguatge Grans</p>
       <p class="intro animate-on-scroll">Una LLM (Model de Llenguatge Gran) és un tipus d'intel·ligència artificial entrenada amb grans quantitats de text per comprendre i generar llenguatge natural. Aquest model utilitza xarxes neuronals per analitzar patrons, relacions i significats dins del text.</p>

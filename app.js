@@ -8,35 +8,17 @@
 // Esperar a que el DOM esté completamente cargado
 document.addEventListener('DOMContentLoaded', () => {
     // Inicializar todas las funcionalidades
-    initToggleSections();
     initMobileMenu();
     initBackToTopButton();
-    initCharts();
     initAccordions();
     initTabs();
-    initDarkMode();
+    initDarkModeToggle();
     initScrollAnimations();
     initTooltips();
-    initQuiz();
-    initFormValidation();
-    initSearch();
-    initModelFilters();
+    initTableSearch();
     initTableSorting();
-    initCarousel();
-    initModals();
-    initDynamicContent();
-    initLoadingSpinners();
-    initToastNotifications();
-    initVisualFeedback();
-    initFontSizeChanger();
-    initKeyboardShortcuts();
-    initFocusManagement();
-    initAPIIntegration();
-    initNewsWidget();
-    initTimeline();
-    initTranslator();
-    initPromptGenerator();
-    initTextProcessor();
+    initSmoothScroll();
+    initGraphBackground(); // Inicializar el fondo animado de grafos
 });
 
 /**
@@ -408,6 +390,9 @@ document.addEventListener('DOMContentLoaded', () => {
     createNavigationMenu();
     enhanceTrivia();
     initCharts(); // Inicializar gráficos
+    initTableSearch(); // Filtrado de búsqueda
+    initTableSorting(); // Ordenación de tabla
+    initSmoothScroll(); // Desplazamiento suave
     
     // Mostrar notificación de bienvenida
     setTimeout(() => {
@@ -417,45 +402,65 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Función para crear botón de modo oscuro
 function initDarkModeToggle() {
-    // Crear botón si no existe
-    let darkModeToggle = document.querySelector('.dark-mode-toggle');
+    // Verificar si ya existe el botón para no duplicarlo
+    let darkModeBtn = document.querySelector('.dark-mode-toggle');
     
-    if (!darkModeToggle) {
-        darkModeToggle = document.createElement('button');
-        darkModeToggle.className = 'dark-mode-toggle';
-        darkModeToggle.innerHTML = '🌓';
-        darkModeToggle.setAttribute('aria-label', 'Cambiar modo claro/oscuro');
-        darkModeToggle.setAttribute('title', 'Cambiar modo claro/oscuro');
-        document.body.appendChild(darkModeToggle);
-    }
-    
-    // Comprobar preferencia guardada en localStorage
-    const currentTheme = localStorage.getItem('theme');
-    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-    
-    if (currentTheme === 'dark') {
-        document.body.classList.add('dark-theme');
-    } else if (currentTheme === 'light') {
-        document.body.classList.add('light-theme');
-    } else if (prefersDarkScheme.matches) {
-        // Si no hay preferencia guardada, usar la del sistema
-        document.body.classList.add('dark-theme');
-    }
-    
-    // Acción del botón
-    darkModeToggle.addEventListener('click', () => {
-        const isDarkMode = document.body.classList.contains('dark-theme');
+    if (!darkModeBtn) {
+        // Crear botón si no existe
+        darkModeBtn = document.createElement('button');
+        darkModeBtn.className = 'dark-mode-toggle';
+        darkModeBtn.innerHTML = '<i class="fas fa-moon"></i>';
+        darkModeBtn.setAttribute('aria-label', 'Cambiar a modo oscuro');
+        darkModeBtn.setAttribute('title', 'Cambiar a modo oscuro');
         
-        // Cambiar tema
-        document.body.classList.toggle('dark-theme');
-        document.body.classList.toggle('light-theme');
+        // Agregar a un contenedor o al body
+        const headerControls = document.querySelector('.header-controls');
+        if (headerControls) {
+            headerControls.appendChild(darkModeBtn);
+        } else {
+            document.body.appendChild(darkModeBtn);
+        }
+    }
+    
+    // Verificar preferencia guardada
+    const darkModePreference = localStorage.getItem('darkMode') === 'true';
+    
+    // Aplicar modo oscuro si estaba activado
+    if (darkModePreference) {
+        document.body.classList.add('dark-theme');
+        document.documentElement.setAttribute('data-theme', 'dark');
+        darkModeBtn.innerHTML = '<i class="fas fa-sun"></i>';
+        darkModeBtn.setAttribute('aria-label', 'Cambiar a modo claro');
+        darkModeBtn.setAttribute('title', 'Cambiar a modo claro');
+    }
+    
+    // Función que cambia el modo
+    function toggleDarkMode() {
+        const isDarkMode = document.body.classList.toggle('dark-theme');
+        
+        // Actualizar también el atributo data-theme para CSS
+        if (isDarkMode) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            darkModeBtn.innerHTML = '<i class="fas fa-sun"></i>';
+            darkModeBtn.setAttribute('aria-label', 'Cambiar a modo claro');
+            darkModeBtn.setAttribute('title', 'Cambiar a modo claro');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+            darkModeBtn.innerHTML = '<i class="fas fa-moon"></i>';
+            darkModeBtn.setAttribute('aria-label', 'Cambiar a modo oscuro');
+            darkModeBtn.setAttribute('title', 'Cambiar a modo oscuro');
+        }
         
         // Guardar preferencia
-        localStorage.setItem('theme', isDarkMode ? 'light' : 'dark');
+        localStorage.setItem('darkMode', isDarkMode);
         
-        // Mostrar notificación
-        showToast(`Modo ${isDarkMode ? 'claro' : 'oscuro'} activado`, 'success');
-    });
+        // Emitir evento para que otros componentes puedan reaccionar al cambio de tema
+        const event = new CustomEvent('themeChanged', { detail: { darkMode: isDarkMode } });
+        document.dispatchEvent(event);
+    }
+    
+    // Asociar evento al botón
+    darkModeBtn.addEventListener('click', toggleDarkMode);
 }
 
 // Función para crear botón Volver Arriba
@@ -836,4 +841,185 @@ function showToast(message, type = 'info') {
             }, 300);
         }
     }, 4000);
+}
+
+// Filtrado de búsqueda para la tabla
+function initTableSearch() {
+    const searchInput = document.getElementById('search-models');
+    if (!searchInput) return;
+    
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const table = document.getElementById('taula-models');
+        if (!table) return;
+        
+        const rows = table.querySelectorAll('tbody tr');
+        
+        rows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            const match = text.includes(searchTerm);
+            row.style.display = match ? '' : 'none';
+        });
+        
+        if (searchTerm.length > 0) {
+            showToast(`Filtrant per: "${searchTerm}"`, 'info');
+        }
+    });
+}
+
+// Ordenación de la tabla
+function initTableSorting() {
+    const table = document.getElementById('taula-models');
+    if (!table) return;
+    
+    const headers = table.querySelectorAll('th[data-sort]');
+    headers.forEach(header => {
+        header.addEventListener('click', () => {
+            const sortKey = header.getAttribute('data-sort');
+            const isAscending = header.classList.contains('sort-asc');
+            
+            // Cambiar indicador de dirección de ordenación
+            headers.forEach(h => h.classList.remove('sort-asc', 'sort-desc'));
+            header.classList.add(isAscending ? 'sort-desc' : 'sort-asc');
+            
+            // Ordenar filas
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            
+            rows.sort((rowA, rowB) => {
+                const cellA = rowA.cells[Array.from(headers).indexOf(header)].textContent.trim();
+                const cellB = rowB.cells[Array.from(headers).indexOf(header)].textContent.trim();
+                
+                return isAscending ? 
+                    cellA.localeCompare(cellB, 'ca', { sensitivity: 'base' }) : 
+                    cellB.localeCompare(cellA, 'ca', { sensitivity: 'base' });
+            });
+            
+            // Reordenar el DOM
+            rows.forEach(row => tbody.appendChild(row));
+            
+            showToast(`Taula ordenada per ${header.textContent.trim()}`, 'info');
+        });
+    });
+}
+
+// Scroll suave para los enlaces de navegación
+function initSmoothScroll() {
+    const links = document.querySelectorAll('a[href^="#"]');
+    
+    links.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            
+            const targetElement = document.querySelector(targetId);
+            if (!targetElement) return;
+            
+            window.scrollTo({
+                top: targetElement.offsetTop - 80, // Ajustar para considerar la navegación fixed
+                behavior: 'smooth'
+            });
+        });
+    });
+}
+
+// Animación de fondo con grafos para representar redes neuronales
+function initGraphBackground() {
+    const canvas = document.getElementById('graph-background');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    
+    // Ajustar canvas al tamaño de la ventana
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    
+    // Llamar al resize inicialmente y al cambiar tamaño de ventana
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    
+    // Configuración de la animación
+    const nodes = [];
+    const maxNodes = 80; // Cantidad de nodos
+    const nodeRadius = 2;
+    const nodeConnectionRadius = 150; // Radio para conectar nodos
+    const nodeSpeed = 0.3;
+    
+    // Colores adaptados al tema claro/oscuro
+    function getColors() {
+        const isDark = document.body.classList.contains('dark-theme');
+        return {
+            node: isDark ? 'rgba(255, 255, 255, 0.5)' : 'rgba(67, 97, 238, 0.5)',
+            line: isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(67, 97, 238, 0.2)',
+            highlight: isDark ? 'rgba(124, 180, 255, 0.8)' : 'rgba(239, 71, 111, 0.8)'
+        };
+    }
+    
+    // Crear nodos
+    for (let i = 0; i < maxNodes; i++) {
+        nodes.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            speedX: (Math.random() - 0.5) * nodeSpeed,
+            speedY: (Math.random() - 0.5) * nodeSpeed,
+            lastUpdate: 0
+        });
+    }
+    
+    // Función de animación
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const colors = getColors();
+        
+        // Actualizar posición de nodos
+        nodes.forEach(node => {
+            node.x += node.speedX;
+            node.y += node.speedY;
+            
+            // Rebotar en los bordes
+            if (node.x < 0 || node.x > canvas.width) node.speedX *= -1;
+            if (node.y < 0 || node.y > canvas.height) node.speedY *= -1;
+            
+            // Dibujar nodo
+            ctx.beginPath();
+            ctx.arc(node.x, node.y, nodeRadius, 0, Math.PI * 2);
+            ctx.fillStyle = colors.node;
+            ctx.fill();
+        });
+        
+        // Dibujar conexiones entre nodos cercanos
+        for (let i = 0; i < nodes.length; i++) {
+            for (let j = i + 1; j < nodes.length; j++) {
+                const dx = nodes[i].x - nodes[j].x;
+                const dy = nodes[i].y - nodes[j].y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < nodeConnectionRadius) {
+                    // Opacidad basada en la distancia
+                    const opacity = 1 - (distance / nodeConnectionRadius);
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(nodes[i].x, nodes[i].y);
+                    ctx.lineTo(nodes[j].x, nodes[j].y);
+                    ctx.strokeStyle = `rgba(67, 97, 238, ${opacity * 0.25})`;
+                    ctx.lineWidth = opacity * 1.5;
+                    ctx.stroke();
+                }
+            }
+        }
+        
+        requestAnimationFrame(animate);
+    }
+    
+    // Iniciar animación
+    animate();
+    
+    // Cambiar colores cuando cambia el modo oscuro/claro
+    document.addEventListener('themeChanged', () => {
+        // Los colores se actualizarán en el siguiente frame
+    });
 }
