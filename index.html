@@ -3,111 +3,313 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Què és un LLM?</title>
+  <meta name="description" content="Aprendre sobre els Models de Llenguatge Grans (LLMs): què són, com funcionen i els seus usos" />
+  <meta name="keywords" content="LLM, IA, intel·ligència artificial, GPT, models de llenguatge" />
+  <title>Què és un LLM? | Guía Interactiva</title>
   <link rel="stylesheet" href="styles.css" />
+  <!-- Font Awesome per icones -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <script defer src="app.js"></script>
 </head>
 <body>
-  <header>
-    <h1>Què és un LLM?</h1>
-    <p>Una LLM (Model de Llenguatge Gran) és un tipus d'intel·ligència artificial entrenada amb grans quantitats de text per comprendre i generar llenguatge natural. Aquest model utilitza xarxes neuronals per analitzar patrons, relacions i significats dins del text. Així pot realitzar diverses tasques com respondre preguntes, traduir, escriure textos o generar resums. Alguns exemples coneguts de LLM són GPT-3 i GPT-4 (creats per OpenAI),o BERT (desenvolupat per Google). 
-</p>
-    <ul>
+  <header class="hero">
+    <div class="container">
+      <h1 class="animate-on-scroll">Què és un LLM?</h1>
+      <p class="tagline animate-on-scroll">Una guía interactiva sobre els Models de Llenguatge Grans</p>
+      <p class="intro animate-on-scroll">Una LLM (Model de Llenguatge Gran) és un tipus d'intel·ligència artificial entrenada amb grans quantitats de text per comprendre i generar llenguatge natural. Aquest model utilitza xarxes neuronals per analitzar patrons, relacions i significats dins del text.</p>
+      <div class="header-cta">
+        <a href="#explicacio" class="btn btn-primary"><i class="fas fa-book-open"></i> Començar a aprendre</a>
+      </div>
+    </div>
   </header>
 
-  <section id="explicacio">
-    <h2>Explicació bàsica</h2>
-    <p>Un Model de Llenguatge Gran (LLM) és una eina d’intel·ligència artificial dissenyada per entendre i produir text en llenguatge natural. Es basa en xarxes neuronals, que són models matemàtics capaços de processar i identificar patrons en grans volums de text. Aquest tipus de model és entrenat amb milions de textos perquè aprengui la gramàtica, el significat i la relació entre les paraules. Això li permet generar respostes, completar frases i realitzar tasques relacionades amb el llenguatge de manera autònoma.</p>
-<p>Els LLM no només poden generar text, sinó que també són capaços de reconèixer contextos, analitzar converses i adaptar-se a diferents situacions i temes, proporcionant respostes que semblen humanes. La seva capacitat d’aprendre dels textos i d’evolucionar amb el temps els fa molt útils en una gran varietat d’aplicacions.</p>
-</p>
-    <ul>
-      <li>Assistents de conversa</li>
-      <li>Traducció automàtica</li>
-      <li>Generació de codi</li>
-      <li>Anàlisi de sentiments</li>
-    </ul>
-  </section>
+  <main class="container">
+    <section id="explicacio" class="card animate-on-scroll">
+      <div class="section-header">
+        <i class="fas fa-brain section-icon"></i>
+        <h2>Explicació bàsica</h2>
+      </div>
+      <div class="section-content">
+        <p>Un Model de Llenguatge Gran (LLM) és una eina d'intel·ligència artificial dissenyada per entendre i produir text en llenguatge natural. Es basa en xarxes neuronals, que són models matemàtics capaços de processar i identificar patrons en grans volums de text. Aquest tipus de model és entrenat amb milions de textos perquè aprengui la gramàtica, el significat i la relació entre les paraules.</p>
+        <p>Això li permet generar respostes, completar frases i realitzar tasques relacionades amb el llenguatge de manera autònoma. Els LLM no només poden generar text, sinó que també són capaços de reconèixer contextos, analitzar converses i adaptar-se a diferents situacions i temes, proporcionant respostes que semblen humanes.</p>
+        
+        <div class="features-grid">
+          <div class="feature-item">
+            <i class="fas fa-comments"></i>
+            <h3>Assistents de conversa</h3>
+            <p>Xats i assistents virtuals que mantenen converses naturals</p>
+          </div>
+          <div class="feature-item">
+            <i class="fas fa-language"></i>
+            <h3>Traducció automàtica</h3>
+            <p>Traducció de textos entre diferents idiomes amb precisió</p>
+          </div>
+          <div class="feature-item">
+            <i class="fas fa-code"></i>
+            <h3>Generació de codi</h3>
+            <p>Creació i optimització de codi en diversos llenguatges</p>
+          </div>
+          <div class="feature-item">
+            <i class="fas fa-chart-bar"></i>
+            <h3>Anàlisi de sentiments</h3>
+            <p>Identificació d'opinions i sentiments en textos</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  <section id="comparativa">
-    <h2>Comparativa de models</h2>
-    <button onclick="toggleTaula()">Mostrar / Amagar Taula</button>
-    <table id="taula-models">
-      <thead>
-        <tr>
-          <th>Model</th>
-          <th>Empresa</th>
-          <th>Codi obert</th>
-          <th>Accés</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>GPT-4</td>
-          <td>OpenAI</td>
-          <td>No</td>
-          <td>ChatGPT Plus</td>
-        </tr>
-        <tr>
-          <td>Claude</td>
-          <td>Anthropic</td>
-          <td>No</td>
-          <td>Poe</td>
-        </tr>
-        <tr>
-          <td>Gemini</td>
-          <td>Google</td>
-          <td>Parcial</td>
-          <td>Gemini</td>
-        </tr>
-        <tr>
-          <td>LLaMA</td>
-          <td>Meta</td>
-          <td>Sí</td>
-          <td>Hugging Face</td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
+    <section id="comparativa" class="card animate-on-scroll">
+      <div class="section-header">
+        <i class="fas fa-chart-pie section-icon"></i>
+        <h2>Comparativa de models</h2>
+      </div>
+      <div class="section-content">
+        <div class="table-controls">
+          <button class="btn btn-secondary" onclick="toggleTaula()"><i class="fas fa-table"></i> Mostrar / Amagar Taula</button>
+          <div class="search-container">
+            <input type="text" id="search-models" placeholder="Cercar models..." class="search-input">
+            <i class="fas fa-search search-icon"></i>
+          </div>
+        </div>
+        
+        <div class="table-responsive">
+          <table id="taula-models" class="data-table">
+            <thead>
+              <tr>
+                <th data-sort="model">Model <i class="fas fa-sort"></i></th>
+                <th data-sort="empresa">Empresa <i class="fas fa-sort"></i></th>
+                <th data-sort="codi">Codi obert <i class="fas fa-sort"></i></th>
+                <th data-sort="acces">Accés <i class="fas fa-sort"></i></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>GPT-4</td>
+                <td>OpenAI</td>
+                <td><span class="badge badge-danger">No</span></td>
+                <td>ChatGPT Plus</td>
+              </tr>
+              <tr>
+                <td>Claude 3</td>
+                <td>Anthropic</td>
+                <td><span class="badge badge-danger">No</span></td>
+                <td>Claude, Poe</td>
+              </tr>
+              <tr>
+                <td>Gemini Ultra</td>
+                <td>Google</td>
+                <td><span class="badge badge-warning">Parcial</span></td>
+                <td>Gemini Advanced</td>
+              </tr>
+              <tr>
+                <td>LLaMA 3</td>
+                <td>Meta</td>
+                <td><span class="badge badge-success">Sí</span></td>
+                <td>Hugging Face</td>
+              </tr>
+              <tr>
+                <td>Mistral Large</td>
+                <td>Mistral AI</td>
+                <td><span class="badge badge-warning">Parcial</span></td>
+                <td>Le Chat, API</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="chart-container" data-chart-type="bar" data-chart-title="Comparativa de rendiment">
+          <canvas id="llm-chart"></canvas>
+        </div>
+      </div>
+    </section>
 
-  <section id="casos-us">
-  <h2>Casos d'ús</h2>
-  <ul>
-    <li><th>Generació de textos creatius:</th> Composició d’articles, poemes o fins i tot guions per a pel·lícules i sèries.</li>
-    <li><th>Assistència en recerca acadèmica:</th> Ajuda a generar resums de textos acadèmics, a buscar informació rellevant i a redactar documents.</li>
-    <li><th>Generació automàtica de codi informàtic:</th> LLMs poden ajudar els programadors escrivint codi o resolent problemes tècnics.</li>
-    <li><th>Generació o lectura d'informes mèdics:</th> Pot ajudar a analitzar informes mèdics i a redactar-los, reduint la tasca administrativa de metges i infermeres.</li>
-    <li><th>Traducció en temps real:</th> Permet mantenir converses entre persones que no comparteixen la mateixa llengua, traduint els missatges instantàniament per facilitar la comunicació directa.</li>
-    <li><th>Automatització de processos d’atenció al client:</th> Serveixen per gestionar consultes de clients de manera automàtica i eficient a través de xatbots.</li>
-    <li><th>Creació de respostes personalitzades en màrqueting:</th> Generar missatges personalitzats per a campanyes publicitàries segons les preferències de l'usuari.</li>
-    <li><th>Millora de l'accessibilitat:</th> Creació de descripcions per a persones amb discapacitat visual o traducció de textos per a persones amb discapacitat auditiva.</li>
-    <li><th>Assistents virtuals personals:</th> Models com els xatbots poden oferir companyia a persones que es senten soles o tenen poc contacte social, mantenint converses que redueixen el sentiment de solitud.</li>
-    <li><th>Creació de dades tabulars a partir d'informes:</th> Models de llenguatge clínic permeten la lectura simultània de milers d'informes i l'obtenció de dades tabulars més accessibles en casos d’urgència i utilitzables en tasques d’anàlisi de dades (com l’entrenament de IA o anàlisis estadístics clàssics).</li>
-    <li><th>Filtratge automàtic d’estudis:</th> Al realitzar un metaestudi, els models de LLM permeten el processament de bases de dades de papers científics simultàniament per tal de filtrar segons els requisits de l'estudi.</li>
-  </ul>
-</section>
+    <section id="casos-us" class="card animate-on-scroll">
+      <div class="section-header">
+        <i class="fas fa-tasks section-icon"></i>
+        <h2>Casos d'ús</h2>
+      </div>
+      <div class="section-content">
+        <p>Els Models de Llenguatge Grans tenen una amplia varietat d'aplicacions en diferents àmbits:</p>
+        
+        <div class="tabs-container">
+          <div class="tab-buttons">
+            <button class="tab-button" data-tab="creatiu">Creativitat</button>
+            <button class="tab-button" data-tab="professional">Professional</button>
+            <button class="tab-button" data-tab="accessibilitat">Accessibilitat</button>
+          </div>
+          
+          <div class="tab-panel" data-tab="creatiu">
+            <div class="use-cases">
+              <div class="use-case-item">
+                <i class="fas fa-pen-fancy"></i>
+                <h3>Generació de textos creatius</h3>
+                <p>Composició d'articles, poemes o fins i tot guions per a pel·lícules i sèries.</p>
+              </div>
+              <div class="use-case-item">
+                <i class="fas fa-robot"></i>
+                <h3>Assistents virtuals personals</h3>
+                <p>Models com els xatbots poden oferir companyia a persones que es senten soles o tenen poc contacte social.</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="tab-panel" data-tab="professional">
+            <div class="use-cases">
+              <div class="use-case-item">
+                <i class="fas fa-graduation-cap"></i>
+                <h3>Assistència en recerca acadèmica</h3>
+                <p>Ajuda a generar resums de textos acadèmics, a buscar informació rellevant i a redactar documents.</p>
+              </div>
+              <div class="use-case-item">
+                <i class="fas fa-code"></i>
+                <h3>Generació automàtica de codi</h3>
+                <p>LLMs poden ajudar els programadors escrivint codi o resolent problemes tècnics.</p>
+              </div>
+              <div class="use-case-item">
+                <i class="fas fa-hospital"></i>
+                <h3>Informes mèdics</h3>
+                <p>Pot ajudar a analitzar informes mèdics i a redactar-los, reduint la tasca administrativa.</p>
+              </div>
+              <div class="use-case-item">
+                <i class="fas fa-headset"></i>
+                <h3>Atenció al client</h3>
+                <p>Gestió de consultes de clients de manera automàtica i eficient a través de xatbots.</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="tab-panel" data-tab="accessibilitat">
+            <div class="use-cases">
+              <div class="use-case-item">
+                <i class="fas fa-language"></i>
+                <h3>Traducció en temps real</h3>
+                <p>Permet mantenir converses entre persones que no comparteixen la mateixa llengua.</p>
+              </div>
+              <div class="use-case-item">
+                <i class="fas fa-universal-access"></i>
+                <h3>Millora de l'accessibilitat</h3>
+                <p>Creació de descripcions per a persones amb discapacitat visual o traducció de textos.</p>
+              </div>
+              <div class="use-case-item">
+                <i class="fas fa-database"></i>
+                <h3>Creació de dades tabulars</h3>
+                <p>Lectura simultània de milers d'informes i obtenció de dades tabulars més accessibles.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  <section id="enllacos">
-    <h2>Enllaços útils</h2>
-    <ul>
-      <li><a href="https://chat.openai.com/" target="_blank">OpenAI</a></li>
-      <li><a href="https://poe.com/" target="_blank">Poe</a></li>
-      <li><a href="https://huggingface.co/models" target="_blank">Hugging Face</a></li>
-    </ul>
-  </section>
+    <section id="enllacos" class="card animate-on-scroll">
+      <div class="section-header">
+        <i class="fas fa-link section-icon"></i>
+        <h2>Enllaços útils</h2>
+      </div>
+      <div class="section-content">
+        <div class="links-grid">
+          <a href="https://chat.openai.com/" target="_blank" class="resource-card">
+            <i class="fas fa-robot"></i>
+            <h3>OpenAI ChatGPT</h3>
+            <p>Experimenta amb el model GPT-4 d'OpenAI</p>
+          </a>
+          <a href="https://poe.com/" target="_blank" class="resource-card">
+            <i class="fas fa-comment-dots"></i>
+            <h3>Poe</h3>
+            <p>Accedeix a múltiples models LLM en una sola plataforma</p>
+          </a>
+          <a href="https://huggingface.co/models" target="_blank" class="resource-card">
+            <i class="fas fa-code-branch"></i>
+            <h3>Hugging Face</h3>
+            <p>Repositori de models d'IA i eines per desenvolupadors</p>
+          </a>
+          <a href="https://ai.google/" target="_blank" class="resource-card">
+            <i class="fas fa-lightbulb"></i>
+            <h3>Google AI</h3>
+            <p>Descobreix les eines d'IA de Google, incloent Gemini</p>
+          </a>
+        </div>
+      </div>
+    </section>
 
-  <section id="riscs">
-    <h2>Riscos ètics</h2>
-    <p>Tot i els avantatges dels LLMs, també presenten riscos com ara:</p>
-    <ul>
-      <li>Desinformació</li>
-      <li>Biaixos algorítmics</li>
-      <li>Problemes de privacitat</li>
-    </ul>
-  </section>
+    <section id="riscs" class="card animate-on-scroll">
+      <div class="section-header">
+        <i class="fas fa-exclamation-triangle section-icon"></i>
+        <h2>Riscos ètics</h2>
+      </div>
+      <div class="section-content">
+        <p>Tot i els avantatges dels LLMs, també presenten riscos importants que cal considerar:</p>
+        
+        <div class="alert alert-warning">
+          <p>Els Models de Llenguatge Grans tenen limitacions i riscos que poden afectar la societat si no s'utilitzen amb consciència i sota supervisió adequada.</p>
+        </div>
+        
+        <div class="risk-cards">
+          <div class="risk-card">
+            <i class="fas fa-newspaper"></i>
+            <h3>Desinformació</h3>
+            <p>Capacitat de generar contingut fals però versemblant que pot difondre's com a informació verídica.</p>
+          </div>
+          <div class="risk-card">
+            <i class="fas fa-balance-scale"></i>
+            <h3>Biaixos algorítmics</h3>
+            <p>Reproducció i amplificació de biaixos presents en les dades d'entrenament.</p>
+          </div>
+          <div class="risk-card">
+            <i class="fas fa-user-shield"></i>
+            <h3>Problemes de privacitat</h3>
+            <p>Riscos relacionats amb l'ús de dades personals i la seva possible exposició.</p>
+          </div>
+          <div class="risk-card">
+            <i class="fas fa-id-card"></i>
+            <h3>Suplantació d'identitat</h3>
+            <p>Possibilitat d'imitar estils de persones reals per generar contingut fraudulent.</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  <section id="trivia">
-    <h2>Trivia interactiva</h2>
-    <button onclick="alert('Correcte! GPT-4 és propietari d\'OpenAI.')">Qui ha creat GPT-4?</button>
-  </section>
+    <section id="trivia" class="card animate-on-scroll">
+      <div class="section-header">
+        <i class="fas fa-gamepad section-icon"></i>
+        <h2>Trivia interactiva</h2>
+      </div>
+      <div class="section-content">
+        <p>Posa a prova els teus coneixements sobre els Models de Llenguatge Grans amb aquest petit quiz:</p>
+        <!-- El contenido del quiz se generará por JavaScript -->
+      </div>
+    </section>
+    
+    <footer>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-logo">
+            <h2>Guía LLM</h2>
+            <p>© 2025 - Tots els drets reservats</p>
+          </div>
+          <div class="footer-nav">
+            <h3>Navegació</h3>
+            <ul>
+              <li><a href="#explicacio">Què són els LLMs</a></li>
+              <li><a href="#comparativa">Comparativa</a></li>
+              <li><a href="#casos-us">Casos d'ús</a></li>
+              <li><a href="#riscs">Riscos ètics</a></li>
+            </ul>
+          </div>
+          <div class="footer-social">
+            <h3>Segueix-nos</h3>
+            <div class="social-icons">
+              <a href="#" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+              <a href="#" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+              <a href="#" target="_blank" aria-label="Github"><i class="fab fa-github"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+    
+    <!-- Botones flotantes -->
+    <!-- Los botones se generarán por JavaScript -->
+  </main>
 </body>
 </html>

@@ -216,30 +216,55 @@ function initAccordions() {
 
 // 3. Tabs para organizar contenido
 function initTabs() {
+    console.log('Inicializando tabs...');
     const tabContainers = document.querySelectorAll('.tabs-container');
+    console.log('Encontrados', tabContainers.length, 'contenedores de tabs');
     
     tabContainers.forEach(container => {
         const tabButtons = container.querySelectorAll('.tab-button');
         const tabPanels = container.querySelectorAll('.tab-panel');
         
+        console.log('Tabs en este contenedor:', tabButtons.length);
+        console.log('Paneles en este contenedor:', tabPanels.length);
+        
+        // Primero ocultar todos los paneles
+        tabPanels.forEach(panel => {
+            panel.style.display = 'none';
+            panel.classList.remove('active');
+        });
+        
         tabButtons.forEach(button => {
             button.addEventListener('click', () => {
                 const tabId = button.getAttribute('data-tab');
+                console.log('Click en tab:', tabId);
                 
                 // Desactivar todos los botones y paneles
                 tabButtons.forEach(btn => btn.classList.remove('active'));
-                tabPanels.forEach(panel => panel.classList.remove('active'));
+                tabPanels.forEach(panel => {
+                    panel.classList.remove('active');
+                    panel.style.display = 'none';
+                });
                 
                 // Activar el botón y panel seleccionados
                 button.classList.add('active');
-                container.querySelector(`.tab-panel[data-tab="${tabId}"]`).classList.add('active');
+                const selectedPanel = container.querySelector(`.tab-panel[data-tab="${tabId}"]`);
+                if (selectedPanel) {
+                    selectedPanel.classList.add('active');
+                    selectedPanel.style.display = 'block';
+                    console.log('Panel activado:', tabId);
+                } else {
+                    console.error('No se encontró el panel:', tabId);
+                }
             });
         });
         
         // Activar el primer tab por defecto si no hay ninguno activo
         if (!container.querySelector('.tab-button.active')) {
             const firstButton = container.querySelector('.tab-button');
-            if (firstButton) firstButton.click();
+            if (firstButton) {
+                console.log('Activando primer tab por defecto');
+                firstButton.click();
+            }
         }
     });
 }
@@ -379,8 +404,15 @@ document.addEventListener('DOMContentLoaded', () => {
     initScrollAnimations();
     initTooltips();
     initAccordions();
+    initTabs(); // Inicializar las pestañas
     createNavigationMenu();
     enhanceTrivia();
+    initCharts(); // Inicializar gráficos
+    
+    // Mostrar notificación de bienvenida
+    setTimeout(() => {
+        showToast('Benvingut a la guia interactiva sobre LLMs!', 'success');
+    }, 1000);
 });
 
 // Función para crear botón de modo oscuro
@@ -561,10 +593,21 @@ function initAccordions() {
     // Convertir secciones en acordeones
     const sections = document.querySelectorAll('section');
     
+    // Lista de secciones que siempre deben mostrarse
+    const importantSections = ['explicacio', 'comparativa', 'casos-us', 'enllacos', 'riscs', 'trivia'];
+    
     sections.forEach(section => {
-        // Omitir la sección comparativa que ya tiene un botón toggle
-        if (section.id === 'comparativa') return;
+        // Omitir las secciones importantes
+        if (importantSections.includes(section.id)) {
+            // Solo añadir una clase visual para indicar que es expandible
+            const h2 = section.querySelector('h2');
+            if (h2) {
+                h2.classList.add('section-title');
+            }
+            return;
+        }
         
+        // Para el resto de secciones, crear acordeones
         const h2 = section.querySelector('h2');
         if (h2) {
             // Convertir el h2 en un header de acordeón
@@ -596,11 +639,16 @@ function initAccordions() {
         }
     });
     
-    // Mostrar el primero por defecto
-    const firstAccordion = document.querySelector('.accordion-header');
-    if (firstAccordion) {
-        firstAccordion.click();
-    }
+    // Asegurarse de que el contenido de las secciones importantes esté visible
+    importantSections.forEach(sectionId => {
+        const section = document.getElementById(sectionId);
+        if (section) {
+            const content = section.querySelector('.section-content');
+            if (content) {
+                content.style.display = 'block';
+            }
+        }
+    });
 }
 
 // Crear menú de navegación automático
