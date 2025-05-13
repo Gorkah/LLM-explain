@@ -168,6 +168,49 @@ header p {
   z-index: 1;
 }
 
+/* Controles en la cabecera */
+.header-controls {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 100;
+}
+
+/* Botón de modo oscuro */
+.dark-mode-toggle {
+  background-color: var(--light-color);
+  border: 2px solid var(--primary-color);
+  color: var(--primary-color);
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 0.5rem;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all var(--transition-speed);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.dark-mode-toggle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.dark-theme .dark-mode-toggle,
+html[data-theme="dark"] .dark-mode-toggle {
+  background-color: var(--dark-color);
+  border-color: var(--accent-color);
+  color: #ffffff;
+}
+
 /* Navegación */
 nav {
   background-color: var(--secondary-color);
