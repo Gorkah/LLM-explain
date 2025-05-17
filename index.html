@@ -9,6 +9,8 @@
   <link rel="stylesheet" href="styles.css" />
   <!-- Font Awesome per icones -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Chart.js para gráficos de comparación -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script defer src="app.js"></script>
 </head>
 <body>
@@ -17,7 +19,7 @@
   <header class="hero">
     <div class="container">
       <div class="header-controls">
-        <button id="dark-mode-toggle" class="dark-mode-toggle"><i class="fas fa-moon"></i></button>
+        <button id="dark-mode-toggle" class="dark-mode-toggle" aria-label="Cambiar a modo oscuro" title="Cambiar a modo oscuro"><i class="fas fa-moon"></i></button>
       </div>
       <h1 class="animate-on-scroll">Què és un LLM?</h1>
       <p class="tagline animate-on-scroll">Una guía interactiva sobre els Models de Llenguatge Grans</p>
@@ -83,40 +85,121 @@
               <tr>
                 <th data-sort="model">Model <i class="fas fa-sort"></i></th>
                 <th data-sort="empresa">Empresa <i class="fas fa-sort"></i></th>
+                <th data-sort="parametres">Paràmetres <i class="fas fa-sort"></i></th>
+                <th data-sort="data">Llançament <i class="fas fa-sort"></i></th>
                 <th data-sort="codi">Codi obert <i class="fas fa-sort"></i></th>
                 <th data-sort="acces">Accés <i class="fas fa-sort"></i></th>
+                <th data-sort="rendiment">Rendiment <i class="fas fa-sort"></i></th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>GPT-4</td>
+                <td>GPT-4o</td>
                 <td>OpenAI</td>
+                <td>~1.8 bilions</td>
+                <td>Maig 2024</td>
                 <td><span class="badge badge-danger">No</span></td>
-                <td>ChatGPT Plus</td>
+                <td>ChatGPT Plus, API</td>
+                <td><span class="badge badge-primary">Excel·lent</span></td>
               </tr>
               <tr>
-                <td>Claude 3</td>
+                <td>GPT-4</td>
+                <td>OpenAI</td>
+                <td>~1.7 bilions</td>
+                <td>Març 2023</td>
+                <td><span class="badge badge-danger">No</span></td>
+                <td>ChatGPT Plus</td>
+                <td><span class="badge badge-primary">Excel·lent</span></td>
+              </tr>
+              <tr>
+                <td>Claude 3 Opus</td>
                 <td>Anthropic</td>
+                <td>~2 bilions</td>
+                <td>Març 2024</td>
+                <td><span class="badge badge-danger">No</span></td>
+                <td>Claude Pro, API</td>
+                <td><span class="badge badge-primary">Excel·lent</span></td>
+              </tr>
+              <tr>
+                <td>Claude 3 Sonnet</td>
+                <td>Anthropic</td>
+                <td>~~0.5 bilions</td>
+                <td>Març 2024</td>
                 <td><span class="badge badge-danger">No</span></td>
                 <td>Claude, Poe</td>
+                <td><span class="badge badge-success">Molt bo</span></td>
+              </tr>
+              <tr>
+                <td>Gemini 1.5 Pro</td>
+                <td>Google</td>
+                <td>~1.5 bilions</td>
+                <td>Febrer 2024</td>
+                <td><span class="badge badge-warning">Parcial</span></td>
+                <td>Gemini Advanced, API</td>
+                <td><span class="badge badge-success">Molt bo</span></td>
               </tr>
               <tr>
                 <td>Gemini Ultra</td>
                 <td>Google</td>
+                <td>~1.7 bilions</td>
+                <td>Desembre 2023</td>
                 <td><span class="badge badge-warning">Parcial</span></td>
                 <td>Gemini Advanced</td>
+                <td><span class="badge badge-primary">Excel·lent</span></td>
               </tr>
               <tr>
-                <td>LLaMA 3</td>
+                <td>LLaMA 3 70B</td>
                 <td>Meta</td>
+                <td>70 bilions</td>
+                <td>Abril 2024</td>
                 <td><span class="badge badge-success">Sí</span></td>
-                <td>Hugging Face</td>
+                <td>Hugging Face, GitHub</td>
+                <td><span class="badge badge-success">Molt bo</span></td>
+              </tr>
+              <tr>
+                <td>LLaMA 3 8B</td>
+                <td>Meta</td>
+                <td>8 bilions</td>
+                <td>Abril 2024</td>
+                <td><span class="badge badge-success">Sí</span></td>
+                <td>Hugging Face, GitHub</td>
+                <td><span class="badge badge-info">Bo</span></td>
               </tr>
               <tr>
                 <td>Mistral Large</td>
                 <td>Mistral AI</td>
+                <td>~32 bilions</td>
+                <td>Febrer 2024</td>
                 <td><span class="badge badge-warning">Parcial</span></td>
                 <td>Le Chat, API</td>
+                <td><span class="badge badge-success">Molt bo</span></td>
+              </tr>
+              <tr>
+                <td>Mistral Medium</td>
+                <td>Mistral AI</td>
+                <td>~8 bilions</td>
+                <td>Febrer 2024</td>
+                <td><span class="badge badge-warning">Parcial</span></td>
+                <td>Le Chat, API</td>
+                <td><span class="badge badge-info">Bo</span></td>
+              </tr>
+              <tr>
+                <td>Mistral 7B</td>
+                <td>Mistral AI</td>
+                <td>7 bilions</td>
+                <td>Setembre 2023</td>
+                <td><span class="badge badge-success">Sí</span></td>
+                <td>Hugging Face, GitHub</td>
+                <td><span class="badge badge-info">Bo</span></td>
+              </tr>
+              <tr>
+                <td>COHERE Command R+</td>
+                <td>Cohere</td>
+                <td>~140 bilions</td>
+                <td>Maig 2024</td>
+                <td><span class="badge badge-danger">No</span></td>
+                <td>API</td>
+                <td><span class="badge badge-success">Molt bo</span></td>
               </tr>
             </tbody>
           </table>

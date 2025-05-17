@@ -1,17 +1,40 @@
 /* Estilos para la web educativa sobre LLMs */
 
 :root {
-  --primary-color: #4361ee;
-  --secondary-color: #2c3e50;
-  --accent-color: #ef476f;
-  --light-color: #f8f9fa;
-  --dark-color: #1e2a3a;
-  --success-color: #06d6a0;
-  --warning-color: #ffd166;
-  --font-main: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  --transition-speed: 0.3s;
-  --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  --border-radius: 10px;
+  /* Tema claro (predeterminado) */
+  --primary-color: #4f46e5;
+  --primary-color-dark: #3730a3;
+  --secondary-color: #222222;
+  --accent-color: #10b981;
+  --light-color: #ffffff;
+  --dark-color: #121212;
+  --gray-color: #f3f4f6;
+  --border-color: #e5e7eb;
+  --text-color: #222222;
+  --background-color: #ffffff;
+  --card-background: #ffffff;
+  --border-radius: 0.5rem;
+  --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --font-main: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --transition-speed: 0.3s ease;
+}
+
+/* Variables del tema oscuro */
+:root[data-theme="dark"] {
+  --primary-color: #6366f1;
+  --primary-color-dark: #4f46e5;
+  --secondary-color: #e2e8f0;
+  --accent-color: #34d399;
+  --light-color: #121212;
+  --dark-color: #131415;
+  --gray-color: #1e1e1e;
+  --border-color: #2d2d2d;
+  --text-color: #e2e8f0;
+  --background-color: #121212;
+  --card-background: #1e1e1e;
+  --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
 }
 
 /* Cambiar colores en modo oscuro */
@@ -21,10 +44,10 @@ html[data-theme="dark"] {
   --secondary-color: #1a2639;
   --accent-color: #ff8c8c;
   --background-color: #121212;
-  --light-color: #2a2a2a;
+  --light-color: #e1cfcf;
   --dark-color: #1a1a1a;
-  --text-color: #ffffff;
-  --text-light: #d8d8d8;
+  --text-color: #181717;
+  --text-light: #ffffff;
   --success-color: #4cd964;
   --warning-color: #ffcc00;
   --danger-color: #ff3b30;
@@ -88,8 +111,12 @@ body {
   width: 100%;
   height: 100%;
   z-index: -1;
-  opacity: 0.15;
+  opacity: 0.5; /* Aumentado para mayor visibilidad */
   pointer-events: none;
+  background-color: transparent;
+  display: block;
+  filter: blur(0.2px); /* Añadir un ligero efecto de desenfoque */
+  mix-blend-mode: multiply; /* Mejorar la combinación de colores */
 }
 
 header.hero {
@@ -97,11 +124,17 @@ header.hero {
   color: white;
   text-align: center;
   padding: 5rem 1rem 4rem;
-  margin-bottom: 3rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   position: relative;
   overflow: hidden;
-  clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+  animation: gradientAnimation 15s ease infinite;
+  background-size: 200% 200%;
+}
+
+@keyframes gradientAnimation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 .container {
@@ -181,22 +214,24 @@ header p {
   z-index: 100;
 }
 
-/* Botón de modo oscuro */
+/* Botón para cambiar a modo oscuro */
 .dark-mode-toggle {
-  background-color: var(--light-color);
-  border: 2px solid var(--primary-color);
-  color: var(--primary-color);
-  cursor: pointer;
+  position: relative;
+  background-color: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  color: white;
   font-size: 1.2rem;
+  cursor: pointer;
   padding: 0.5rem;
   border-radius: 50%;
   width: 40px;
   height: 40px;
   display: flex;
-  justify-content: center;
   align-items: center;
-  transition: all var(--transition-speed);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .dark-mode-toggle:hover {
@@ -214,11 +249,18 @@ html[data-theme="dark"] .dark-mode-toggle {
 /* Navegación */
 nav {
   background-color: var(--secondary-color);
-  padding: 0.5rem 1rem;
+  padding: 0.8rem 1rem;
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+nav.scrolled {
+  padding: 0.5rem 1rem;
+  background-color: rgba(44, 62, 80, 0.95);
+  backdrop-filter: blur(10px);
 }
 
 nav ul {
@@ -227,10 +269,12 @@ nav ul {
   justify-content: center;
   max-width: 1200px;
   margin: 0 auto;
+  padding: 0;
 }
 
 nav ul li {
   margin: 0 0.5rem;
+  position: relative;
 }
 
 nav ul li a {
@@ -239,7 +283,30 @@ nav ul li a {
   padding: 0.5rem 1rem;
   display: block;
   border-radius: 4px;
-  transition: background-color var(--transition-speed);
+  transition: all var(--transition-speed);
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+nav ul li a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+nav ul li a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: var(--accent-color);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+nav ul li a:hover::after {
+  width: 70%;
 }
 
 nav ul li a:hover {
@@ -259,9 +326,17 @@ section.card {
   padding: 0;
   background-color: white;
   border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
-  transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+  box-shadow: var(--card-shadow);
+  transition: all var(--transition-speed);
   overflow: hidden;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  position: relative;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
 }
 
 .section-header {
@@ -279,7 +354,14 @@ section.card {
 }
 
 .section-content {
-  padding: 2rem;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.section-content > *:last-child {
+  margin-bottom: 0;
 }
 
 .dark-theme section {
@@ -314,16 +396,18 @@ ul, ol {
 /* Estilos para la tabla de modelos */
 .table-responsive {
   overflow-x: auto;
-  margin: 1.5rem 0;
+  margin-bottom: 2rem;
+  box-shadow: var(--card-shadow);
   border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
 }
 
 .data-table {
   width: 100%;
   border-collapse: collapse;
+  margin: 2rem 0;
+  border-radius: var(--border-radius);
   overflow: hidden;
-  background-color: white;
+  box-shadow: var(--box-shadow);
 }
 
 .badge {
@@ -336,7 +420,7 @@ ul, ol {
   white-space: nowrap;
   vertical-align: baseline;
   border-radius: 30px;
-  color: white;
+  color: black;
 }
 
 .badge-success {
@@ -553,33 +637,78 @@ a:hover::after {
 .back-to-top {
   position: fixed;
   bottom: 90px;
-  right: 20px;
+  right: 30px;
+  min-width: 50px;
+  height: 50px;
+  border-radius: 25px;
   background-color: var(--primary-color);
   color: white;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  text-align: center;
-  line-height: 50px;
-  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
   cursor: pointer;
-  z-index: 99;
   opacity: 0;
   visibility: hidden;
-  transition: opacity var(--transition-speed), visibility var(--transition-speed);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 1000;
+  border: none;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  padding: 0 20px 0 15px;
+  overflow: hidden;
+}
+
+.back-to-top i {
+  margin-right: 8px;
+  font-size: 0.9rem;
+  transition: transform 0.3s ease;
+}
+
+.back-to-top-text {
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(10px);
+  transition: all 0.3s ease;
+  font-weight: 500;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
 }
 
 .back-to-top.visible {
-  opacity: 1;
+  opacity: 0.9;
   visibility: visible;
+}
+
+.back-to-top.hover {
+  background-color: var(--primary-color-dark);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  padding-right: 25px;
+}
+
+.back-to-top.hover i {
+  transform: translateY(-3px);
+}
+
+.back-to-top.hover .back-to-top-text {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.back-to-top.clicked {
+  transform: scale(0.95);
+  transition: transform 0.2s ease;
 }
 
 /* Loader */
 .chart-container {
   position: relative;
   min-height: 300px;
-  margin: 2rem 0;
+  margin: 3rem 0;
+  height: 400px;
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 1.5rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--card-shadow);
 }
 
 /* Estilos para la importación de fuente */
@@ -588,18 +717,50 @@ a:hover::after {
 /* Características en la sección explicación */
 .features-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 1.5rem;
-  margin-top: 2rem;
+  margin: 2rem 0;
+  animation: fadeInUp 1s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .feature-item {
-  background-color: #f8f9fa;
-  padding: 1.5rem;
-  border-radius: var(--border-radius);
+  background-color: white;
+  border-radius: 12px;
+  padding: 1.8rem 1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
   text-align: center;
-  transition: all 0.3s ease;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: all 0.4s ease;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+
+.feature-item:hover::before {
+  transform: scaleX(1);
 }
 
 .feature-item:hover {
@@ -736,6 +897,44 @@ a:hover::after {
   margin-top: 1rem;
   background-color: var(--primary-color);
   color: white;
+}
+
+/* Estilos específicos para el modo oscuro */
+body.dark-theme,
+html.dark-theme {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.dark-theme .card,
+.dark-theme section {
+  background-color: var(--card-background);
+  box-shadow: var(--card-shadow);
+  border-color: var(--border-color);
+}
+
+.dark-theme .data-table th,
+.dark-theme .data-table td {
+  background-color: var(--card-background);
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+.dark-theme .data-table th {
+  background-color: rgba(30, 30, 30, 0.8);
+}
+
+/* Otros elementos en modo oscuro */
+.dark-theme .nav-link,
+.dark-theme .btn,
+.dark-theme h1, .dark-theme h2, .dark-theme h3, .dark-theme h4, .dark-theme h5, .dark-theme h6 {
+  color: var(--text-color);
+}
+
+.dark-theme .tooltip {
+  background-color: var(--card-background);
+  color: var(--text-color);
+  box-shadow: var(--card-shadow);
 }
 
 /* Footer */

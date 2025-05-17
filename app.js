@@ -7,6 +7,8 @@
 
 // Esperar a que el DOM esté completamente cargado
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM cargado, inicializando funcionalidades...');
+    
     // Inicializar todas las funcionalidades
     initMobileMenu();
     initBackToTopButton();
@@ -19,6 +21,12 @@ document.addEventListener('DOMContentLoaded', () => {
     initTableSorting();
     initSmoothScroll();
     initGraphBackground(); // Inicializar el fondo animado de grafos
+    
+    // Inicializar gráficos después de una pequeña espera para asegurar que Chart.js esté cargado
+    setTimeout(() => {
+        console.log('Inicializando gráficos...');
+        initCharts();
+    }, 500);
 });
 
 /**
@@ -394,73 +402,96 @@ document.addEventListener('DOMContentLoaded', () => {
     initTableSorting(); // Ordenación de tabla
     initSmoothScroll(); // Desplazamiento suave
     
-    // Mostrar notificación de bienvenida
-    setTimeout(() => {
-        showToast('Benvingut a la guia interactiva sobre LLMs!', 'success');
-    }, 1000);
+    // Inicializar efecto de navegación al scroll
+    initScrollEffect();
+    
+    // Mostrar notificación de bienvenida (solo una vez por sesión)
+    if (!sessionStorage.getItem('welcomeShown')) {
+        setTimeout(() => {
+            showToast('Benvingut a la guia interactiva sobre LLMs!', 'success');
+            sessionStorage.setItem('welcomeShown', 'true');
+        }, 1000);
+    }
 });
 
-// Función para crear botón de modo oscuro
+// Función para control del modo oscuro - simplificada y más robusta
 function initDarkModeToggle() {
-    // Verificar si ya existe el botón para no duplicarlo
-    let darkModeBtn = document.querySelector('.dark-mode-toggle');
+    console.log('Inicializando modo oscuro...');
     
+    // 1. Obtener el botón del DOM
+    const darkModeBtn = document.getElementById('dark-mode-toggle');
     if (!darkModeBtn) {
-        // Crear botón si no existe
-        darkModeBtn = document.createElement('button');
-        darkModeBtn.className = 'dark-mode-toggle';
-        darkModeBtn.innerHTML = '<i class="fas fa-moon"></i>';
-        darkModeBtn.setAttribute('aria-label', 'Cambiar a modo oscuro');
-        darkModeBtn.setAttribute('title', 'Cambiar a modo oscuro');
-        
-        // Agregar a un contenedor o al body
-        const headerControls = document.querySelector('.header-controls');
-        if (headerControls) {
-            headerControls.appendChild(darkModeBtn);
-        } else {
-            document.body.appendChild(darkModeBtn);
-        }
+        console.error('Botón de modo oscuro no encontrado en el DOM');
+        return; // Salir si no se encuentra el botón
     }
     
-    // Verificar preferencia guardada
-    const darkModePreference = localStorage.getItem('darkMode') === 'true';
+    console.log('Botón de modo oscuro encontrado:', darkModeBtn);
     
-    // Aplicar modo oscuro si estaba activado
-    if (darkModePreference) {
-        document.body.classList.add('dark-theme');
+    // 2. Comprobar preferencia guardada o preferencia del sistema
+    let userPrefersDark = localStorage.getItem('darkMode') === 'true';
+    
+    // Si no hay preferencia guardada, comprobar preferencia del sistema
+    if (localStorage.getItem('darkMode') === null) {
+        userPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    
+    console.log('Modo oscuro preferido:', userPrefersDark);
+    
+    // 3. Función para aplicar el tema oscuro
+    function enableDarkMode() {
+        console.log('ACTIVANDO modo oscuro');
         document.documentElement.setAttribute('data-theme', 'dark');
+        document.documentElement.classList.add('dark-theme');
+        document.body.classList.add('dark-theme');
         darkModeBtn.innerHTML = '<i class="fas fa-sun"></i>';
         darkModeBtn.setAttribute('aria-label', 'Cambiar a modo claro');
         darkModeBtn.setAttribute('title', 'Cambiar a modo claro');
+        localStorage.setItem('darkMode', 'true');
     }
     
-    // Función que cambia el modo
-    function toggleDarkMode() {
-        const isDarkMode = document.body.classList.toggle('dark-theme');
+    // 4. Función para aplicar el tema claro
+    function disableDarkMode() {
+        console.log('DESACTIVANDO modo oscuro');
+        document.documentElement.setAttribute('data-theme', 'light');
+        document.documentElement.classList.remove('dark-theme');
+        document.body.classList.remove('dark-theme');
+        darkModeBtn.innerHTML = '<i class="fas fa-moon"></i>';
+        darkModeBtn.setAttribute('aria-label', 'Cambiar a modo oscuro');
+        darkModeBtn.setAttribute('title', 'Cambiar a modo oscuro');
+        localStorage.setItem('darkMode', 'false');
+    }
+    
+    // 5. Aplicar el tema inicial basado en la preferencia
+    if (userPrefersDark) {
+        enableDarkMode();
+    } else {
+        disableDarkMode();
+    }
+    
+    // 6. Función para alternar el modo
+    function toggleDarkMode(e) {
+        e.preventDefault();
+        console.log('Alternando modo oscuro...');
         
-        // Actualizar también el atributo data-theme para CSS
-        if (isDarkMode) {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            darkModeBtn.innerHTML = '<i class="fas fa-sun"></i>';
-            darkModeBtn.setAttribute('aria-label', 'Cambiar a modo claro');
-            darkModeBtn.setAttribute('title', 'Cambiar a modo claro');
+        // Comprobar estado actual
+        if (document.documentElement.getAttribute('data-theme') === 'dark') {
+            disableDarkMode();
         } else {
-            document.documentElement.setAttribute('data-theme', 'light');
-            darkModeBtn.innerHTML = '<i class="fas fa-moon"></i>';
-            darkModeBtn.setAttribute('aria-label', 'Cambiar a modo oscuro');
-            darkModeBtn.setAttribute('title', 'Cambiar a modo oscuro');
+            enableDarkMode();
         }
         
-        // Guardar preferencia
-        localStorage.setItem('darkMode', isDarkMode);
-        
-        // Emitir evento para que otros componentes puedan reaccionar al cambio de tema
-        const event = new CustomEvent('themeChanged', { detail: { darkMode: isDarkMode } });
-        document.dispatchEvent(event);
+        // Forzar redibujado de los grafos y otros componentes visuales
+        setTimeout(() => {
+            window.dispatchEvent(new Event('resize'));
+        }, 100);
     }
     
-    // Asociar evento al botón
-    darkModeBtn.addEventListener('click', toggleDarkMode);
+    // 7. Eliminar eventos existentes y agregar el nuevo
+    const newToggle = darkModeBtn.cloneNode(true);
+    darkModeBtn.parentNode.replaceChild(newToggle, darkModeBtn);
+    newToggle.addEventListener('click', toggleDarkMode);
+    
+    console.log('Control de modo oscuro inicializado correctamente');
 }
 
 // Función para crear botón Volver Arriba
@@ -471,30 +502,55 @@ function initBackToTopButton() {
     if (!backToTopBtn) {
         backToTopBtn = document.createElement('button');
         backToTopBtn.className = 'back-to-top';
-        backToTopBtn.innerHTML = '↑';
-        backToTopBtn.setAttribute('aria-label', 'Volver arriba');
-        backToTopBtn.setAttribute('title', 'Volver arriba');
+        backToTopBtn.innerHTML = '<i class="fas fa-chevron-up"></i>';
+        backToTopBtn.setAttribute('aria-label', 'Tornar a dalt');
+        backToTopBtn.setAttribute('title', 'Tornar a dalt');
         document.body.appendChild(backToTopBtn);
+        
+        // Añadir el texto descriptivo
+        const btnText = document.createElement('span');
+        btnText.className = 'back-to-top-text';
+        btnText.textContent = 'Tornar a dalt';
+        backToTopBtn.appendChild(btnText);
     }
     
     // Mostrar/ocultar botón según scroll
     window.addEventListener('scroll', () => {
         if (window.pageYOffset > 300) {
             backToTopBtn.classList.add('visible');
+            
+            // Añadir efecto de desplazamiento basado en scroll
+            const scrollPercentage = Math.min(1, (window.pageYOffset - 300) / 1000);
+            backToTopBtn.style.transform = `translateY(${(1 - scrollPercentage) * 10}px)`;
+            backToTopBtn.style.opacity = 0.2 + (scrollPercentage * 0.8);
         } else {
             backToTopBtn.classList.remove('visible');
         }
     });
     
+    // Añadir efecto hover
+    backToTopBtn.addEventListener('mouseenter', () => {
+        backToTopBtn.classList.add('hover');
+    });
+    
+    backToTopBtn.addEventListener('mouseleave', () => {
+        backToTopBtn.classList.remove('hover');
+    });
+    
     // Acción del botón
     backToTopBtn.addEventListener('click', () => {
+        // Añadir clase de animación de clic
+        backToTopBtn.classList.add('clicked');
+        
+        // Quitar la clase después de la animación
+        setTimeout(() => {
+            backToTopBtn.classList.remove('clicked');
+        }, 300);
+        
         window.scrollTo({
             top: 0,
             behavior: 'smooth'
         });
-        
-        // Mostrar notificación
-        showToast('Has vuelto al inicio', 'info');
     });
 }
 
@@ -539,19 +595,23 @@ function initScrollAnimations() {
 
 // Tooltips informativos
 function initTooltips() {
-    // Añadir tooltips a elementos relevantes
+    // Removemos tooltips de h2 que estaban causando problemas
+    // Ahora solo aplicamos tooltips a las cabeceras de tabla
     const elementsForTooltip = [
-        { selector: 'h2', text: 'Haz clic para leer más sobre esta sección' },
-        { selector: '#taula-models th', text: 'Haz clic para ordenar' },
-        { selector: 'a', text: 'Enlace externo' }
+        { selector: '#taula-models th', text: 'Haz clic para ordenar' }
     ];
     
+    // Primero, limpiar cualquier tooltip antiguo que esté causando problemas
+    const oldTooltips = document.querySelectorAll('[data-tooltip]');
+    oldTooltips.forEach(el => {
+        el.removeAttribute('data-tooltip');
+    });
+    
+    // Ahora agregar tooltips solo a los elementos específicos
     elementsForTooltip.forEach(item => {
         const elements = document.querySelectorAll(item.selector);
         elements.forEach(element => {
-            if (!element.hasAttribute('data-tooltip')) {
-                element.setAttribute('data-tooltip', item.text);
-            }
+            element.setAttribute('data-tooltip', item.text);
         });
     });
     
@@ -561,7 +621,12 @@ function initTooltips() {
     tooltipElements.forEach(element => {
         const tooltipText = element.getAttribute('data-tooltip');
         
-        element.addEventListener('mouseenter', (e) => {
+        // Quitar listeners antiguos si existen
+        element.removeEventListener('mouseenter', element._tooltipEnterHandler);
+        element.removeEventListener('mouseleave', element._tooltipLeaveHandler);
+        
+        // Crear y guardar nuevos handlers
+        element._tooltipEnterHandler = (e) => {
             // Crear elemento tooltip
             const tooltip = document.createElement('div');
             tooltip.className = 'tooltip';
@@ -577,9 +642,9 @@ function initTooltips() {
             
             // Guardar referencia al tooltip
             element.tooltip = tooltip;
-        });
+        };
         
-        element.addEventListener('mouseleave', () => {
+        element._tooltipLeaveHandler = () => {
             if (element.tooltip) {
                 element.tooltip.classList.remove('visible');
                 setTimeout(() => {
@@ -589,7 +654,19 @@ function initTooltips() {
                     element.tooltip = null;
                 }, 300);
             }
-        });
+        };
+        
+        // Añadir nuevos listeners
+        element.addEventListener('mouseenter', element._tooltipEnterHandler);
+        element.addEventListener('mouseleave', element._tooltipLeaveHandler);
+    });
+    
+    // Limpiar cualquier tooltip huérfano que pueda haber quedado
+    const orphanTooltips = document.querySelectorAll('.tooltip');
+    orphanTooltips.forEach(tooltip => {
+        if (tooltip.parentNode) {
+            tooltip.parentNode.removeChild(tooltip);
+        }
     });
 }
 
@@ -735,64 +812,164 @@ function enhanceTrivia() {
         oldButton.remove();
     }
     
+    // Definir las preguntas del quiz
+    const quizQuestions = [
+        {
+            question: 'Qui ha creat GPT-4?',
+            options: ['OpenAI', 'Google', 'Microsoft', 'Meta'],
+            correctIndex: 0,
+            explanation: 'GPT-4 és un model desenvolupat per OpenAI, llançat el març de 2023.'
+        },
+        {
+            question: 'Quin és el model amb més paràmetres d\'aquesta llista?',
+            options: ['GPT-4o', 'Claude 3 Opus', 'Llama 3 70B', 'COHERE Command R+'],
+            correctIndex: 3,
+            explanation: 'COHERE Command R+ té aproximadament 140 bilions de paràmetres, el que el fa el més gran de la llista.'
+        },
+        {
+            question: 'Quina d\'aquestes empreses ofereix models completament oberts?',
+            options: ['OpenAI', 'Anthropic', 'Meta', 'Google'],
+            correctIndex: 2,
+            explanation: 'Meta ha llançat la seva sèrie de models LLaMA com a models completament de codi obert.'
+        },
+        {
+            question: 'Quin any va ser llançat el primer model GPT?',
+            options: ['2017', '2018', '2020', '2022'],
+            correctIndex: 1,
+            explanation: 'El primer model GPT (Generative Pre-trained Transformer) va ser llançat per OpenAI al juny de 2018.'
+        },
+        {
+            question: 'Quin és el principal problema ètic dels LLMs?',
+            options: ['Consumeixen molta energia', 'Poden generar desinformació', 'Són massa costosos', 'No entenen realment el context'],
+            correctIndex: 1,
+            explanation: 'La capacitat de generar contingut fals però versemblant és un dels principals riscos ètics dels LLMs.'
+        }
+    ];
+    
     // Crear un quiz interactivo
     const quizContainer = document.createElement('div');
     quizContainer.className = 'quiz-container';
+    triviaSection.querySelector('.section-content').appendChild(quizContainer);
     
-    const quizHTML = `
-        <div class="quiz-question">Quiz: ¿Quién ha creado GPT-4?</div>
-        <div class="quiz-options">
-            <div class="quiz-option" data-correct="true">OpenAI</div>
-            <div class="quiz-option">Google</div>
-            <div class="quiz-option">Microsoft</div>
-            <div class="quiz-option">Meta</div>
-        </div>
-        <div class="quiz-feedback"></div>
-        <button class="quiz-next-btn" style="display:none;">Siguiente pregunta</button>
-    `;
-    
-    quizContainer.innerHTML = quizHTML;
-    triviaSection.appendChild(quizContainer);
-    
-    // Añadir interactividad al quiz
-    const options = quizContainer.querySelectorAll('.quiz-option');
-    const feedback = quizContainer.querySelector('.quiz-feedback');
-    const nextBtn = quizContainer.querySelector('.quiz-next-btn');
-    
+    // Variables para seguimiento del quiz
+    let currentQuestionIndex = 0;
+    let score = 0;
     let answered = false;
     
-    options.forEach(option => {
-        option.addEventListener('click', () => {
-            if (answered) return;
-            
-            answered = true;
-            const isCorrect = option.getAttribute('data-correct') === 'true';
-            
-            // Marcar opciones
-            options.forEach(opt => {
-                if (opt === option) {
-                    opt.classList.add('selected');
-                    opt.classList.add(isCorrect ? 'correct' : 'incorrect');
-                } else if (opt.getAttribute('data-correct') === 'true') {
-                    opt.classList.add('correct');
-                }
+    // Función para mostrar una pregunta
+    function showQuestion(questionIndex) {
+        const question = quizQuestions[questionIndex];
+        answered = false;
+        
+        const quizHTML = `
+            <div class="quiz-progress">Pregunta ${questionIndex + 1} de ${quizQuestions.length}</div>
+            <div class="quiz-question">${question.question}</div>
+            <div class="quiz-options">
+                ${question.options.map((option, index) => 
+                    `<div class="quiz-option" data-index="${index}">${option}</div>`
+                ).join('')}
+            </div>
+            <div class="quiz-feedback"></div>
+            <div class="quiz-controls">
+                <button class="quiz-next-btn" style="display:none;">Següent pregunta</button>
+                <div class="quiz-score">Puntuació: <span>${score}</span>/${quizQuestions.length}</div>
+            </div>
+        `;
+        
+        quizContainer.innerHTML = quizHTML;
+        
+        // Añadir interactividad a las opciones
+        const options = quizContainer.querySelectorAll('.quiz-option');
+        const feedback = quizContainer.querySelector('.quiz-feedback');
+        const nextBtn = quizContainer.querySelector('.quiz-next-btn');
+        
+        options.forEach(option => {
+            option.addEventListener('click', () => {
+                if (answered) return;
+                
+                answered = true;
+                const selectedIndex = parseInt(option.getAttribute('data-index'));
+                const isCorrect = selectedIndex === question.correctIndex;
+                
+                // Actualizar puntuación
+                if (isCorrect) score++;
+                quizContainer.querySelector('.quiz-score span').textContent = score;
+                
+                // Marcar opciones
+                options.forEach((opt, idx) => {
+                    if (idx === selectedIndex) {
+                        opt.classList.add('selected');
+                        opt.classList.add(isCorrect ? 'correct' : 'incorrect');
+                    } 
+                    if (idx === question.correctIndex) {
+                        opt.classList.add('correct');
+                    }
+                });
+                
+                // Mostrar feedback
+                feedback.textContent = `${isCorrect ? 'Correcte!' : 'Incorrecte.'} ${question.explanation}`;
+                feedback.className = `quiz-feedback ${isCorrect ? 'success' : 'error'}`;
+                
+                // Mostrar notificación
+                showToast(isCorrect ? 'Resposta correcta!' : 'Resposta incorrecta', isCorrect ? 'success' : 'error');
+                
+                // Mostrar botón de siguiente
+                nextBtn.style.display = 'block';
             });
-            
-            // Mostrar feedback
-            feedback.textContent = isCorrect ? '¡Correcto! GPT-4 es un modelo desarrollado por OpenAI.' : 'Incorrecto. GPT-4 es un modelo desarrollado por OpenAI.';
-            feedback.className = `quiz-feedback ${isCorrect ? 'success' : 'error'}`;
-            
-            // Mostrar notificación
-            showToast(isCorrect ? '¡Respuesta correcta!' : 'Respuesta incorrecta', isCorrect ? 'success' : 'error');
-            
-            // Mostrar botón de siguiente (en una versión completa habría más preguntas)
-            nextBtn.style.display = 'block';
         });
-    });
+        
+        // Configurar botón de siguiente
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestionIndex < quizQuestions.length - 1) {
+                currentQuestionIndex++;
+                showQuestion(currentQuestionIndex);
+            } else {
+                // Mostrar resumen final
+                showFinalScore();
+            }
+        });
+    }
     
-    nextBtn.addEventListener('click', () => {
-        showToast('En la versión completa habría más preguntas', 'info');
-    });
+    // Función para mostrar puntuación final
+    function showFinalScore() {
+        const percentage = Math.round((score / quizQuestions.length) * 100);
+        let message;
+        
+        if (percentage >= 80) {
+            message = 'Excel·lent! Ets un expert en LLMs!';
+        } else if (percentage >= 60) {
+            message = 'Molt bé! Tens bons coneixements sobre LLMs.';
+        } else if (percentage >= 40) {
+            message = 'No està malament, però podries millorar els teus coneixements sobre LLMs.';
+        } else {
+            message = 'Potser hauries de revisar més informació sobre LLMs. Segueix aprenent!';
+        }
+        
+        const finalHTML = `
+            <div class="quiz-final">
+                <h3>Quiz complet!</h3>
+                <div class="quiz-final-score">Puntuació final: ${score}/${quizQuestions.length} (${percentage}%)</div>
+                <p>${message}</p>
+                <button class="quiz-restart-btn">Tornar a començar</button>
+            </div>
+        `;
+        
+        quizContainer.innerHTML = finalHTML;
+        
+        // Añadir evento para reiniciar
+        const restartBtn = quizContainer.querySelector('.quiz-restart-btn');
+        restartBtn.addEventListener('click', () => {
+            currentQuestionIndex = 0;
+            score = 0;
+            showQuestion(currentQuestionIndex);
+        });
+        
+        // Mostrar notificación
+        showToast(`Has completat el quiz amb una puntuació de ${percentage}%`, 'success');
+    }
+    
+    // Iniciar el quiz mostrando la primera pregunta
+    showQuestion(currentQuestionIndex);
 }
 
 // Función para mostrar notificaciones tipo toast
@@ -925,17 +1102,45 @@ function initSmoothScroll() {
     });
 }
 
+// Efecto de cambio en la barra de navegación al hacer scroll
+function initScrollEffect() {
+    const nav = document.querySelector('nav');
+    if (!nav) return;
+    
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 100) {
+            nav.classList.add('scrolled');
+        } else {
+            nav.classList.remove('scrolled');
+        }
+    });
+}
+
 // Animación de fondo con grafos para representar redes neuronales
 function initGraphBackground() {
     const canvas = document.getElementById('graph-background');
-    if (!canvas) return;
+    if (!canvas) {
+        console.error('Canvas no encontrado. Creando uno nuevo.');
+        // Crear el canvas si no existe
+        const newCanvas = document.createElement('canvas');
+        newCanvas.id = 'graph-background';
+        document.body.prepend(newCanvas); // Insertarlo al principio del body
+        canvas = newCanvas;
+    }
     
     const ctx = canvas.getContext('2d');
+    if (!ctx) {
+        console.error('No se pudo obtener el contexto 2D del canvas');
+        return;
+    }
+    
+    console.log('Inicializando fondo de grafos');
     
     // Ajustar canvas al tamaño de la ventana
     function resizeCanvas() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
+        console.log(`Canvas redimensionado a ${canvas.width}x${canvas.height}`);
     }
     
     // Llamar al resize inicialmente y al cambiar tamaño de ventana
@@ -944,18 +1149,19 @@ function initGraphBackground() {
     
     // Configuración de la animación
     const nodes = [];
-    const maxNodes = 80; // Cantidad de nodos
-    const nodeRadius = 2;
-    const nodeConnectionRadius = 150; // Radio para conectar nodos
-    const nodeSpeed = 0.3;
+    const maxNodes = 120; // Aumentado para mayor densidad
+    const nodeRadius = 4; // Nodos más grandes para mayor visibilidad
+    const nodeConnectionRadius = 200; // Radio mayor para más conexiones
+    const nodeSpeed = 0.25; // Velocidad más lenta para un efecto más elegante
     
-    // Colores adaptados al tema claro/oscuro
+    // Colores adaptados al tema claro/oscuro con más intensidad
     function getColors() {
-        const isDark = document.body.classList.contains('dark-theme');
+        const isDark = document.body.classList.contains('dark-theme') || 
+                       document.documentElement.getAttribute('data-theme') === 'dark';
         return {
-            node: isDark ? 'rgba(255, 255, 255, 0.5)' : 'rgba(67, 97, 238, 0.5)',
-            line: isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(67, 97, 238, 0.2)',
-            highlight: isDark ? 'rgba(124, 180, 255, 0.8)' : 'rgba(239, 71, 111, 0.8)'
+            node: isDark ? 'rgba(255, 255, 255, 0.65)' : 'rgba(67, 97, 238, 0.65)',
+            line: isDark ? 'rgba(255, 255, 255, 0.35)' : 'rgba(67, 97, 238, 0.35)',
+            highlight: isDark ? 'rgba(124, 180, 255, 0.9)' : 'rgba(239, 71, 111, 0.9)'
         };
     }
     
@@ -966,6 +1172,7 @@ function initGraphBackground() {
             y: Math.random() * canvas.height,
             speedX: (Math.random() - 0.5) * nodeSpeed,
             speedY: (Math.random() - 0.5) * nodeSpeed,
+            radius: Math.random() * 2 + nodeRadius - 1, // Tamaños variados
             lastUpdate: 0
         });
     }
@@ -975,23 +1182,7 @@ function initGraphBackground() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         const colors = getColors();
         
-        // Actualizar posición de nodos
-        nodes.forEach(node => {
-            node.x += node.speedX;
-            node.y += node.speedY;
-            
-            // Rebotar en los bordes
-            if (node.x < 0 || node.x > canvas.width) node.speedX *= -1;
-            if (node.y < 0 || node.y > canvas.height) node.speedY *= -1;
-            
-            // Dibujar nodo
-            ctx.beginPath();
-            ctx.arc(node.x, node.y, nodeRadius, 0, Math.PI * 2);
-            ctx.fillStyle = colors.node;
-            ctx.fill();
-        });
-        
-        // Dibujar conexiones entre nodos cercanos
+        // Dibujar conexiones entre nodos cercanos primero (para que queden debajo)
         for (let i = 0; i < nodes.length; i++) {
             for (let j = i + 1; j < nodes.length; j++) {
                 const dx = nodes[i].x - nodes[j].x;
@@ -1005,21 +1196,50 @@ function initGraphBackground() {
                     ctx.beginPath();
                     ctx.moveTo(nodes[i].x, nodes[i].y);
                     ctx.lineTo(nodes[j].x, nodes[j].y);
-                    ctx.strokeStyle = `rgba(67, 97, 238, ${opacity * 0.25})`;
-                    ctx.lineWidth = opacity * 1.5;
+                    ctx.strokeStyle = `rgba(67, 97, 238, ${opacity * 0.4})`;
+                    ctx.lineWidth = opacity * 1.8;
                     ctx.stroke();
                 }
             }
         }
+        
+        // Actualizar posición de nodos y dibujarlos
+        nodes.forEach(node => {
+            node.x += node.speedX;
+            node.y += node.speedY;
+            
+            // Rebotar en los bordes
+            if (node.x < 0 || node.x > canvas.width) node.speedX *= -1;
+            if (node.y < 0 || node.y > canvas.height) node.speedY *= -1;
+            
+            // Dibujar nodo
+            ctx.beginPath();
+            ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+            ctx.fillStyle = colors.node;
+            ctx.fill();
+            
+            // Añadir brillo
+            ctx.beginPath();
+            ctx.arc(node.x, node.y, node.radius * 1.5, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(67, 97, 238, 0.15)`;
+            ctx.fill();
+        });
         
         requestAnimationFrame(animate);
     }
     
     // Iniciar animación
     animate();
+    console.log('Animación de grafos iniciada');
     
     // Cambiar colores cuando cambia el modo oscuro/claro
     document.addEventListener('themeChanged', () => {
-        // Los colores se actualizarán en el siguiente frame
+        console.log('Tema cambiado, actualizando colores de grafos');
     });
+    
+    // Verificar que el canvas sea visible
+    setTimeout(() => {
+        const computedStyle = window.getComputedStyle(canvas);
+        console.log(`Visibilidad del canvas: ${computedStyle.visibility}, Opacidad: ${computedStyle.opacity}, Z-index: ${computedStyle.zIndex}`);
+    }, 1000);
 }
