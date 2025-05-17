@@ -1260,7 +1260,7 @@ function initAITypingEffect() {
         pauseBeforeDelete: 1500, // Pausa antes de borrar texto en ms
         pauseBeforeStart: 500,   // Pausa antes de empezar a escribir el texto en ms
         typeErrors: true,        // Si se deben simular errores de tipeo
-        errorRate: 0.09,         // Tasa de errores (0.03 = 3%)
+        errorRate: 0.04,         // Tasa de errores (0.03 = 3%)
         cursorBlinkSpeed: 600,   // Velocidad de parpadeo del cursor en ms
         aiThinking: [1, 2]       // Rango de tiempo [min, max] que la IA "piensa" antes de escribir en ms
     };
