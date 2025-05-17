@@ -37,7 +37,7 @@
   --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
 }
 
-/* Cambiar colores en modo oscuro */
+/* Cambiar colores en modo oscuro - corregidos para mejor contraste */
 .dark-theme,
 html[data-theme="dark"] {
   --primary-color: #7cb4ff;
@@ -46,8 +46,8 @@ html[data-theme="dark"] {
   --background-color: #121212;
   --light-color: #e1cfcf;
   --dark-color: #1a1a1a;
-  --text-color: #181717;
-  --text-light: #ffffff;
+  --text-color: #ffffff;
+  --text-light: #e0e0e0;
   --success-color: #4cd964;
   --warning-color: #ffcc00;
   --danger-color: #ff3b30;
@@ -547,7 +547,7 @@ a {
   display: block;
   padding: 1.5rem;
   border-radius: var(--border-radius);
-  background-color: #f8f9fa;
+  background-color: rgb(159, 159, 159);
   border: 1px solid rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
   text-align: center;
@@ -799,7 +799,7 @@ a:hover::after {
 }
 
 .risk-card {
-  background-color: #f8f9fa;
+  background-color: rgb(159, 159, 159);
   padding: 1.5rem;
   border-radius: var(--border-radius);
   border: 1px solid rgba(0, 0, 0, 0.05);
@@ -847,7 +847,7 @@ a:hover::after {
 }
 
 .quiz-option {
-  background-color: white;
+  background-color: rgb(159, 159, 159);
   padding: 1.2rem;
   border-radius: var(--border-radius);
   cursor: pointer;
@@ -899,7 +899,7 @@ a:hover::after {
   color: white;
 }
 
-/* Estilos específicos para el modo oscuro */
+/* Estilos específicos para el modo oscuro - mejorado el contraste */
 body.dark-theme,
 html.dark-theme {
   background-color: var(--background-color);
@@ -924,13 +924,53 @@ html.dark-theme {
   background-color: rgba(30, 30, 30, 0.8);
 }
 
-/* Otros elementos en modo oscuro */
+/* Mejorar la legibilidad de todos los textos en modo oscuro */
+.dark-theme p,
+.dark-theme span:not(.badge),
+.dark-theme li,
+.dark-theme a,
 .dark-theme .nav-link,
-.dark-theme .btn,
-.dark-theme h1, .dark-theme h2, .dark-theme h3, .dark-theme h4, .dark-theme h5, .dark-theme h6 {
+.dark-theme .btn:not(.btn-primary):not(.btn-secondary):not(.btn-accent),
+.dark-theme h1, .dark-theme h2, .dark-theme h3, .dark-theme h4, .dark-theme h5, .dark-theme h6,
+.dark-theme label,
+.dark-theme input,
+.dark-theme textarea,
+.dark-theme select,
+.dark-theme option {
   color: var(--text-color);
 }
 
+/* Asegurar que las tarjetas y secciones tengan buen contraste en modo oscuro */
+.dark-theme .feature-item,
+.dark-theme .section-content,
+.dark-theme .accordion-panel,
+.dark-theme .tab-panel {
+  color: var(--text-color);
+  background-color: var(--card-background);
+}
+
+/* Garantizar que los badges tengan buen contraste */
+.dark-theme .badge {
+  color: #000000;
+}
+
+.dark-theme .badge-success {
+  background-color: #4cd964;
+}
+
+.dark-theme .badge-warning {
+  background-color: #ffcc00;
+}
+
+.dark-theme .badge-danger {
+  background-color: #ff3b30;
+}
+
+.dark-theme .badge-info {
+  background-color: #34aadc;
+}
+
+/* Asegurar que los tooltips sean legibles */
 .dark-theme .tooltip {
   background-color: var(--card-background);
   color: var(--text-color);
