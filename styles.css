@@ -977,12 +977,39 @@ html.dark-theme {
   box-shadow: var(--card-shadow);
 }
 
+/* Estilos para el efecto de escritura tipo IA */
+.ai-cursor {
+  display: inline-block;
+  margin-left: 2px;
+  font-weight: bold;
+  animation: blink 0.7s infinite;
+  color: var(--primary-color);
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.ai-thinking {
+  display: inline-block;
+  color: var(--primary-color);
+  font-weight: bold;
+  min-width: 18px;
+}
+
+/* Asegurar que los contenedores de texto con efecto de escritura mantengan su altura */
+.intro, .tagline, .section-content > p, .feature-item p, .accordion-panel p, .tab-panel p {
+  min-height: 1.5em;
+}
+
 /* Footer */
 footer {
   background-color: var(--secondary-color);
   color: white;
-  padding: 4rem 0 2rem;
-  margin-top: 4rem;
+  padding: 2rem 1rem;
+  text-align: center;
+  margin-top: 2rem;
 }
 
 .footer-content {
