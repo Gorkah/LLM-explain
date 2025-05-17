@@ -415,7 +415,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Función para control del modo oscuro - simplificada y más robusta
+// Función para control del modo oscuro - siempre inicia en modo claro por defecto
 function initDarkModeToggle() {
     console.log('Inicializando modo oscuro...');
     
@@ -428,15 +428,9 @@ function initDarkModeToggle() {
     
     console.log('Botón de modo oscuro encontrado:', darkModeBtn);
     
-    // 2. Comprobar preferencia guardada o preferencia del sistema
-    let userPrefersDark = localStorage.getItem('darkMode') === 'true';
-    
-    // Si no hay preferencia guardada, comprobar preferencia del sistema
-    if (localStorage.getItem('darkMode') === null) {
-        userPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    }
-    
-    console.log('Modo oscuro preferido:', userPrefersDark);
+    // 2. Comprobar si hay una preferencia explícita guardada por el usuario
+    // Si no hay preferencia guardada o es la primera visita, usar modo claro
+    const explicitUserPreference = localStorage.getItem('darkMode');
     
     // 3. Función para aplicar el tema oscuro
     function enableDarkMode() {
@@ -462,10 +456,12 @@ function initDarkModeToggle() {
         localStorage.setItem('darkMode', 'false');
     }
     
-    // 5. Aplicar el tema inicial basado en la preferencia
-    if (userPrefersDark) {
+    // 5. Aplicar el tema inicial - SIEMPRE iniciar en modo claro excepto si el usuario
+    // ha seleccionado explícitamente el modo oscuro en una visita anterior
+    if (explicitUserPreference === 'true') {
         enableDarkMode();
     } else {
+        // Asegurar que se inicia en modo claro por defecto
         disableDarkMode();
     }
     
@@ -1255,7 +1251,7 @@ function initAITypingEffect() {
     // Configuración del efecto
     const config = {
         initialDelay: 100,        // Retraso inicial antes de empezar a escribir
-        typeSpeed: [10, 15],     // Rango de velocidad de escritura [min, max] en ms
+        typeSpeed: [5, 12],     // Rango de velocidad de escritura [min, max] en ms
         deleteSpeed: [25, 40],   // Rango de velocidad de borrado [min, max] en ms
         pauseBeforeDelete: 1500, // Pausa antes de borrar texto en ms
         pauseBeforeStart: 500,   // Pausa antes de empezar a escribir el texto en ms
